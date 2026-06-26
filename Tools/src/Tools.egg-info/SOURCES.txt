@@ -1,8 +1,0 @@
-pyproject.toml
-src/Tools/Tools.py
-src/Tools/__init__.py
-src/Tools/art.py
-src/Tools.egg-info/PKG-INFO
-src/Tools.egg-info/SOURCES.txt
-src/Tools.egg-info/dependency_links.txt
-src/Tools.egg-info/top_level.txt
