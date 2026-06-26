@@ -1,0 +1,5 @@
+# roots file for gald.py
+# format is word meaning
+chron time
+non not
+pyro fire
