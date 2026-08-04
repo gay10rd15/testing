@@ -1,0 +1,3 @@
+character name: we
+class: bard
+level: 9

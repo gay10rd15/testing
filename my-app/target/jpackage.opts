@@ -1,0 +1,4 @@
+# jpackage
+--dest /Users/parkerellering/testing/my-app/target/dist
+--name 'MusicPlayer'
+--vendor 'YourName'

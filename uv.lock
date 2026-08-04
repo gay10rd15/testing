@@ -588,12 +588,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/26/1d/8878c7752febb0f6716a7e1a52cb92ac98871c5aa522cba181878091607c/PyAudio-0.2.14.tar.gz", hash = "sha256:78dfff3879b4994d1f4fc6485646a57755c6ee3c19647a491f790a0895bd2f87", size = 47066, upload-time = "2023-11-07T07:11:48.806Z" }
 
 [[package]]
-name = "pygame"
-version = "2.6.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/49/cc/08bba60f00541f62aaa252ce0cfbd60aebd04616c0b9574f755b583e45ae/pygame-2.6.1.tar.gz", hash = "sha256:56fb02ead529cee00d415c3e007f75e0780c655909aaa8e8bf616ee09c9feb1f", size = 14808125, upload-time = "2024-09-29T13:41:34.698Z" }
-
-[[package]]
 name = "pyobjc"
 version = "12.2"
 source = { registry = "https://pypi.org/simple" }
@@ -3343,7 +3337,6 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pyaudio" },
-    { name = "pygame" },
     { name = "pyttsx3" },
     { name = "questionary" },
     { name = "requests" },
@@ -3358,7 +3351,6 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.11.0" },
     { name = "numpy", specifier = ">=2.5.0" },
     { name = "pyaudio", specifier = ">=0.2.14" },
-    { name = "pygame", specifier = ">=2.6.1" },
     { name = "pyttsx3", specifier = ">=2.99" },
     { name = "questionary", specifier = ">=2.1.1" },
     { name = "requests", specifier = ">=2.34.2" },
