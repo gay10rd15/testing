@@ -1,0 +1,9 @@
+Static {
+    padding: 0 1;
+    height: auto;
+    border: round #2b3239;
+}
+
+TextArea {
+    border: round #2b3239;
+}
