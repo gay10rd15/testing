@@ -1,13 +1,15 @@
-import mac_imessage
-import requests
 import argparse
 import os
 import re
 import sys
+
+import mac_imessage
 import questionary
+import requests
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, "contacts.txt")
+
 
 def load_contacts():
     contacts = {}
@@ -15,26 +17,29 @@ def load_contacts():
         with open(file_path, "r") as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith('#') and ": " in line:
+                if line and not line.startswith("#") and ": " in line:
                     name, number = line.split(": ", 1)
                     contacts[name.strip()] = number.strip()
     return contacts
 
+
 contacts = load_contacts()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("target", nargs='?', help="Contact name or phone number")
+parser.add_argument("target", nargs="?", help="Contact name or phone number")
 parser.add_argument("-p", "--phone", help="Direct phone number to send to")
 parser.add_argument("-c", "--contact", help="Send to contact by name")
 args = parser.parse_args()
 
+
 def get_phone_number(target):
-    if re.search(r'\d', target):
-        return ''.join(filter(str.isdigit, target))
+    if re.search(r"\d", target):
+        return "".join(filter(str.isdigit, target))
     if target in contacts:
-        return ''.join(filter(str.isdigit, contacts[target]))
+        return "".join(filter(str.isdigit, contacts[target]))
     print(f"Contact '{target}' not found.")
     sys.exit(1)
+
 
 # Determine phone number source
 if args.phone:
@@ -47,7 +52,7 @@ else:
     target = input("Enter contact name or phone number: ").strip()
     phone_number = get_phone_number(target)
 
-if len(phone_number) > 10 :
+if len(phone_number) > 10:
     print(f"Invalid number: {phone_number}")
     sys.exit(1)
 
@@ -66,11 +71,9 @@ while True:
             mac_imessage.send(
                 message=f"Here's a cat fact for you: {fact}",
                 phone_number=phone_number,
-                medium='imessage'
+                medium="imessage",
             )
             print("Sent successfully!")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print("Send failed:", e)
         break
-    
-        

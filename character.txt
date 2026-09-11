@@ -1,3 +1,4 @@
-character name: we
-class: bard
-level: 9
+character name: 
+class: barbarian
+level: 1
+subclass: berserker

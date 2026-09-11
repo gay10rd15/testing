@@ -1,4 +1,6 @@
-import re, os, sys
+import os
+import re
+import sys
 from pathlib import Path
 
 # Setup file path
@@ -21,10 +23,27 @@ except FileNotFoundError:
         f.write("# roots file for gald.py")
         f.flush()
     quit()
-#FILTER: filter out any words
-filter_words = {"the", "a", "is", "in", "it", "to", "and", "are", "of", "for", "on", "with", "as", "by", "that", "this"}
+# FILTER: filter out any words
+filter_words = {
+    "the",
+    "a",
+    "is",
+    "in",
+    "it",
+    "to",
+    "and",
+    "are",
+    "of",
+    "for",
+    "on",
+    "with",
+    "as",
+    "by",
+    "that",
+    "this",
+}
 
-#SEARCH: runs every time
+# SEARCH: runs every time
 print("Enter a sentence to search for roots")
 ui = input("> ")
 found_any = False

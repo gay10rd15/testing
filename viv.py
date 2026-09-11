@@ -1,60 +1,71 @@
-import os, sys, re  # noqa: E401
-import speech_recognition as sr
-import webbrowser
-import pyttsx3
+import os  # noqa: E401
+import re
 import subprocess
+import sys
+import webbrowser
+
+import pyttsx3
+import speech_recognition as sr
+
+# pyrefly: ignore [missing-impor
 import Tools
 
 # Check for mac_imessage availability
 try:
     import mac_imessage
+
     IMESSAGE_AVAILABLE = True
 except ImportError:
     print("Warning: mac_imessage not found. iMessage features will be disabled.")
     IMESSAGE_AVAILABLE = False
 
 # --- Configuration ---
-VOICE_ID = 'com.apple.speech.synthesis.voice.Alex'
+VOICE_ID = "com.apple.speech.synthesis.voice.Alex"
 WAKE_WORDS = ["hello", "hello viv"]
 EXIT_COMMANDS = ["exit", "quit", "stop"]
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, "contacts.txt")
+
+
 def load_contacts():
     contacts = {}
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith('#') and ": " in line:
+                if line and not line.startswith("#") and ": " in line:
                     name, number = line.split(": ", 1)
                     contacts[name.strip()] = number.strip()
     return contacts
 
+
 def get_phone_number(target):
-    if re.search(r'\d', target):
-        return ''.join(filter(str.isdigit, target))
+    if re.search(r"\d", target):
+        return "".join(filter(str.isdigit, target))
     if target in contacts:
-        return ''.join(filter(str.isdigit, contacts[target]))
+        return "".join(filter(str.isdigit, contacts[target]))
     print(f"Contact '{target}' not found.")
     sys.exit(1)
+
 
 contacts = load_contacts()
 
 # --- Initialization ---
 recognizer = sr.Recognizer()
-engine = pyttsx3.init(driverName='nsss')
-engine.setProperty('rate', 190)
-voices = engine.getProperty('voices')
+engine = pyttsx3.init(driverName="nsss")
+engine.setProperty("rate", 190)
+voices = engine.getProperty("voices")
 
 voice_set = False
 for voice in voices:
     if VOICE_ID in voice.id:
-        engine.setProperty('voice', voice.id)
+        engine.setProperty("voice", voice.id)
         voice_set = True
         break
 if not voice_set:
     print(f"Voice {VOICE_ID} not found, using default.")
+
 
 def sayt(text):
     """Convert text to speech."""
@@ -62,12 +73,16 @@ def sayt(text):
     engine.say(text)
     engine.runAndWait()
 
+
 def listen_command(timeout=None, phrase_time_limit=None):
     try:
         with sr.Microphone() as source:
             recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Listening...")
-            audio = recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
+            audio = recognizer.listen(
+                source, timeout=timeout, phrase_time_limit=phrase_time_limit
+            )
+            # pyrefly: ignore [missing-attribute]
             text = recognizer.recognize_google(audio).lower()
             print(f"You said: {text}")
             return text
@@ -81,7 +96,8 @@ def listen_command(timeout=None, phrase_time_limit=None):
         return None
     except sr.RequestError as e:
         print(f"API Error: {e}")
-        return None   
+        return None
+
 
 def send_message_via_applescript(message, recipient):
     """
@@ -102,30 +118,30 @@ def send_message_via_applescript(message, recipient):
     except subprocess.CalledProcessError:
         return False
 
+
 def send_message_flow():
     """Handles the multi-step process of sending a message."""
     if not IMESSAGE_AVAILABLE:
         sayt("iMessage library not found. Using AppleScript fallback if possible.")
-    
+
     Tools.beep()
     message_content = listen_command()
-    
+
     if not message_content:
         sayt("I didn't catch that. Cancelling message.")
         return
 
     Tools.beep()
     recipient = listen_command()
-    
+
     if not recipient:
         sayt("No recipient heard. Cancelling.")
         return
 
     recipient = get_phone_number(recipient)
 
-
     sayt(f"Sending to {recipient}.")
-    
+
     success = False
     # Try library first
     if IMESSAGE_AVAILABLE:
@@ -138,43 +154,47 @@ def send_message_flow():
         print("Attempting AppleScript fallback...")
         if send_message_via_applescript(message_content, recipient):
             success = True
-            
+
     if success:
         sayt("Message sent successfully!")
     else:
         sayt("Failed to send message. Check permissions or recipient details.")
 
+
 def search():
     Tools.beep()
-    wts = listen_command() 
+    wts = listen_command()
 
     if not wts:
         sayt("nothing to search for")
     else:
         # 1. Replace spaces with '+'
         # 2. Construct the full URL string
-        search_url = f"https://search.brave.com/search?q={wts.replace(' ', '+')}&source=web"
-        
+        search_url = (
+            f"https://search.brave.com/search?q={wts.replace(' ', '+')}&source=web"
+        )
+
         # 3. Pass the single URL string to webbrowser.open
         webbrowser.open(search_url)
+
 
 # --- Main Loop ---
 if __name__ == "__main__":
     while True:
         text = listen_command()
-        
+
         if not text:
             continue
 
         # Wake Word / Greeting
         if any(word in text for word in WAKE_WORDS):
             sayt("Hello, Parker")
-            
+
         # Exit Command
         elif any(cmd in text for cmd in EXIT_COMMANDS):
             sayt("Shutting down.")
             break
-            
+
         # Open Website
         elif text.startswith("open"):
             Tools.beep()
@@ -184,12 +204,14 @@ if __name__ == "__main__":
             else:
                 app_path = "/Applications/" + app + ".app"
                 subprocess.run(["open", app_path])
-            
+
         # Send Message
         elif "send message" in text or "send a message" in text:
             send_message_flow()
-        
-        elif any(phrase in text for phrase in ["search", "search the web", "search for"]):  
-            search()          
+
+        elif any(
+            phrase in text for phrase in ["search", "search the web", "search for"]
+        ):
+            search()
         else:
-            pass   
+            pass

@@ -1,12 +1,27 @@
-import re
 import random
+import re
 
 txt = input("enter a sentence\n> ")
-rep = [" ~uwu~ ", " XD ", " (˶>⩊<˶) ", " (˶  >   ₃  < ˶) ", " (,,>﹏<,,) ", " ", " ", " ", " "]
+rep = [
+    " ~uwu~ ",
+    " XD ",
+    " (˶>⩊<˶) ",
+    " (˶  >   ₃  < ˶) ",
+    " (,,>﹏<,,) ",
+    " ",
+    " ",
+    " ",
+    " ",
+]
 
-def replace_space(match):
-    return random.choice(rep)
+bruhs = ["bruh", "bro", "dude"]
+bruhr = ["senpai", "master"]
 
-end = re.sub(r" ", replace_space, txt)
+for word in txt.split():
+    if word in bruhs:
+        txt = re.sub(word, random.choice(bruhr), txt)
 
-print(end)   
+
+end = re.sub(r" ", random.choice(rep), txt)
+
+print(end)

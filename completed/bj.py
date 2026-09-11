@@ -1,16 +1,21 @@
-import random
-import time as T
-import os
 import inspect
+import os
+import random
+import sys
+import time as T
+
+
 def round_to_5(x):
     return 5 * round(x / 5)
+
+
 cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 dm = [5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 20, 20, 25]
 stack = inspect.stack()
 try:
     caller_file = inspect.stack()[1].filename
 except IndexError:
-    caller_file = __file__ 
+    caller_file = __file__
 path = os.path.dirname(os.path.abspath(caller_file)) + "money.txt"
 
 try:
@@ -20,18 +25,19 @@ except FileNotFoundError:
     ym = 100  # Default starting money if file doesn't exist
     with open("money.txt", "w") as f:
         f.write(str(ym))
-except Exception as e:
+except Exception as e:  # noqa: BLE001
     print(e)
 while True:
+    # pyrefly: ignore [unbound-name]
     if ym <= 0:
         print("You are out of money!")
         print("you get 100$ more to play with")
         ym += 100  # Reset money to 100
-        open("money.txt", "w").write(str(ym))
+        open("money.txt", "w").write(str(ym))  # noqa: SIM115
     print("\n--- New Game ---")
     db = random.choice(dm)
     print(f"The dealer bets {db}")
-    
+
     while True:
         T.sleep(1)
         print(f"\nYou have {ym}$")
@@ -41,30 +47,30 @@ while True:
         print("or enter q to quit")
         T.sleep(0.25)
         pb_input = input(">")
-        
+
         if pb_input == "q":
-            quit()
-            
+            sys.exit()
+
         # 1. Validate input is a number
         if not pb_input.isdigit():
             print("Invalid input. Please enter a number.")
             continue
-            
+
         pb = int(pb_input)
         pb = round_to_5(pb)
         print(f"you bet {pb}")
-        T.sleep(.5)
+        T.sleep(0.5)
         # 2. CHECK IF PLAYER HAS ENOUGH MONEY
         if pb > ym:
             print(f"You cannot bet {pb}$. You only have {ym}$.")
-            continue # Prompts for bet again
+            continue  # Prompts for bet again
         elif pb <= 0:
             print("Bet must be positive.")
             continue
         else:
-            ym -= pb # Deduct the bet securely
+            ym -= pb  # Deduct the bet securely
             break
-            
+
     pot = pb + db
     dh = [random.choice(cards), random.choice(cards)]
     ph = [random.choice(cards), random.choice(cards)]
@@ -84,7 +90,7 @@ while True:
         elif ph_total > 21:
             print("You busted!")
             break
-        
+
         print("do you want to hit or stay?")
         ui = input("> ").lower()
         if ui == "hit" or ui == "h":
@@ -92,13 +98,13 @@ while True:
         elif ui == "stay" or ui == "s":
             print(f"you stand with {ph_total}")
             break
-    
+
     # 4. Dealer's Turn Logic (if player didn't bust)
     if sum(ph) <= 21:
         while True:
             dh_total = sum(dh)
             print(f"Dealer's hand: {dh} (total: {dh_total})")
-            
+
             if dh_total < 17:
                 # Dealer must hit
                 nc = random.choice(cards)
@@ -114,30 +120,29 @@ while True:
                 T.sleep(2)
                 print("The dealer busted!")
                 break
-        
+
         # Who will win
         dh_final = sum(dh)
         ph_final = sum(ph)
-            
+
         if dh_final > 21 or ph_final > dh_final:
             T.sleep(2)
-            print("you win! good job!"); T.sleep(1.5) 
+            print("you win! good job!")
+            T.sleep(1.5)
             ym += pot * 2
         elif ph_final < dh_final:
             print("you lose")
         else:
             print("it's a tie")
             ym += pb
-    open("money.txt", "w").write(str(ym)) # Save money after each game       
+    open("money.txt", "w").write(str(ym))  # Save money after each game  # noqa: SIM115
     print("----------------")
-    
+
     # Optional: loop to play again
     T.sleep(1)
     play_again = input("Play again? (y/n) > ").lower()
-    if play_again != 'n':
+    if play_again != "n":
         continue
     else:
         break
     print("----------------")
-    
-   

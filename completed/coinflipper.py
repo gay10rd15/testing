@@ -1,14 +1,16 @@
-import random, time as T, argparse
+import argparse
+import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("times", help="the number of times you want to flip a coin")
 args = parser.parse_args()
-num = 0; cf = []
+num = 0
+cf = []
 
 if args.times:
     try:
         int(args.times)
-    except:
+    except:  # noqa: E722
         print("you must enter a number")
     ui = args.times
 else:
@@ -19,16 +21,15 @@ else:
             break
         except ValueError:
             print("you must enter a number")
-while int(num) < int(ui):
-    fr = random.randint(1,2)
+while num < int(ui):
+    fr = random.randint(1, 2)
     cf.append(fr)
     num += 1
 c = cf.count(1)
-int(c)
 if c > int(ui) / 2:
     print("heads was flipped more")
 elif c < int(ui) / 2:
     print("tails was flipped more")
 else:
     print("its a tie")
-#print(cf) # print all the numbers generated
+# print(cf) # print all the numbers generated

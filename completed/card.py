@@ -1,4 +1,6 @@
-import random, argparse
+import argparse
+import random
+
 
 def print_card(rank, suit):
     """
@@ -31,8 +33,10 @@ def print_card(rank, suit):
     print(rank_line_right)
     print(bottom)
 
+
 ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-suits = ['\u2660', '\u2665', '\u2666', '\u2663']
+suits = ["\u2660", "\u2665", "\u2666", "\u2663"]
+
 
 def main():
     suit = random.choice(suits)
@@ -47,4 +51,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     for num in range(int(args.number)):
         main()
-    

@@ -37,14 +37,17 @@
                 <transformer>
                   <mainClass>com.example.App</mainClass>
                 </transformer>
+                <transformer />
               </transformers>
               <filters>
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
+                    <exclude>module-info.class</exclude>
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
                   </excludes>
                 </filter>
               </filters>
@@ -53,26 +56,28 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.github.akman</groupId>
-        <artifactId>jpackage-maven-plugin</artifactId>
-        <version>0.1.5</version>
+        <groupId>io.github.fvarrui</groupId>
+        <artifactId>javapackager</artifactId>
+        <version>1.7.5</version>
         <executions>
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>jpackage</goal>
+              <goal>package</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <mainJar>${project.build.finalName}-all.jar</mainJar>
           <mainClass>com.example.App</mainClass>
-          <inputDir>${project.build.directory}</inputDir>
-          <dest>${project.build.directory}/dist</dest>
-          <name>MusicPlayer</name>
-          <appVersion>1.0</appVersion>
-          <vendor>YourName</vendor>
-          <type>PLATFORM</type>
+          <bundleJre>true</bundleJre>
+          <generateInstaller>true</generateInstaller>
+          <platform>mac</platform>
+          <arch>aarch64</arch>
+          <macStartup>ARM64</macStartup>
+          <codesignApp>true</codesignApp>
+          <vmArgs>
+            <vmArg>--enable-native-access=javafx.graphics</vmArg>
+          </vmArgs>
         </configuration>
       </plugin>
     </plugins>

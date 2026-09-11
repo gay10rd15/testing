@@ -1,9 +1,11 @@
-import random
-import questionary
 import os
+import random
+
+import questionary
 
 MONEY_FILE = "money.txt"
 CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
 
 def get_hand_value(hand):
     """Calculate hand value, handling Aces as 1 or 11."""
@@ -14,12 +16,15 @@ def get_hand_value(hand):
         aces -= 1
     return value
 
+
 def draw_card():
     return random.choice(CARDS)
+
 
 def save_money(amount):
     with open(MONEY_FILE, "w") as f:
         f.write(str(amount))
+
 
 def load_money():
     if not os.path.exists(MONEY_FILE):
@@ -28,9 +33,10 @@ def load_money():
     try:
         with open(MONEY_FILE, "r") as f:
             return int(f.read().strip())
-    except (ValueError, FileNotFoundError):
+    except ValueError, FileNotFoundError:
         save_money(100)
         return 100
+
 
 print("Welcome to Blackjack!")
 
@@ -67,7 +73,7 @@ while True:
     # Deal initial cards
     player_hand = [draw_card(), draw_card()]
     dealer_hand = [draw_card(), draw_card()]
-    
+
     player_total = get_hand_value(player_hand)
     print(f"You have: {player_hand} (Total: {player_total})")
     print(f"Dealer shows: {dealer_hand[0]} and [Hidden]")
@@ -79,7 +85,7 @@ while True:
             player_money += bet  # Return bet
         else:
             print("You win!")
-            player_money += int(pot * 1.5) 
+            player_money += int(pot * 1.5)
         save_money(player_money)
         # Ask to play again
         if questionary.select("Play again?", choices=["yes", "no"]).ask() == "no":
@@ -90,9 +96,9 @@ while True:
         if player_total > 21:
             print("You busted!")
             break
-        
+
         choice = questionary.select("Hit or Stay?", choices=["hit", "stay"]).ask()
-        
+
         if choice == "hit":
             new_card = draw_card()
             player_hand.append(new_card)
@@ -108,12 +114,14 @@ while True:
     else:
         dealer_total = get_hand_value(dealer_hand)
         print(f"\nDealer reveals: {dealer_hand} (Total: {dealer_total})")
-        
+
         while dealer_total < 17:
             new_card = draw_card()
             dealer_hand.append(new_card)
             dealer_total = get_hand_value(dealer_hand)
-            print(f"Dealer hits: {new_card}. Hand: {dealer_hand} (Total: {dealer_total})")
+            print(
+                f"Dealer hits: {new_card}. Hand: {dealer_hand} (Total: {dealer_total})"
+            )
 
         if dealer_total > 21:
             print("Dealer busted! You win!")
@@ -125,10 +133,10 @@ while True:
             print("Dealer wins.")
         else:
             print("It's a tie (Push).")
-            player_money += bet 
+            player_money += bet
 
     save_money(player_money)
 
     if questionary.select("Play again?", choices=["yes", "no"]).ask() == "no":
         print(f"Goodbye! You leave with ${player_money}")
-        break   
+        break

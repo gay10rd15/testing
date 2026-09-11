@@ -1,5 +1,6 @@
 import os
 
+
 def main():
     # --- Setup ---
     try:
@@ -33,7 +34,7 @@ def main():
     for rnd in range(num_of_rounds):
         current_round = rnd + 1
         print(f"\n--- Round Number {current_round} (Cards: {current_round}) ---")
-        
+
         round_bets = []
         round_wins = []
         round_points = []
@@ -45,14 +46,16 @@ def main():
                 try:
                     raw_input = input(f"What does {cpn} think they will win? ").strip()
                     pb = int(raw_input)
-                    
+
                     # Dealer condition: Total bids cannot equal the number of cards
-                    if i == nop - 1: # If this is the last player (dealer)
+                    if i == nop - 1:  # If this is the last player (dealer)
                         total_previous_bets = sum(round_bets)
                         if total_previous_bets + pb == current_round:
-                            print(f"Invalid bid! Total bids ({total_previous_bets + pb}) cannot equal the number of cards ({current_round}).")
+                            print(
+                                f"Invalid bid! Total bids ({total_previous_bets + pb}) cannot equal the number of cards ({current_round})."
+                            )
                             continue
-                    
+
                     round_bets.append(pb)
                     break
                 except ValueError:
@@ -83,12 +86,16 @@ def main():
                 points = 10 * win  # Standard rule: 10 for exact + 1 per trick
                 print(f"{player_names[i]}: Bet {bet} | Won {win} -> +{points} points")
             elif bet < win:
-                points = win # Usually just the number of tricks won if over-bid (rules vary)
-                print(f"{player_names[i]}: Bet {bet} | Won {win} -> +{points} points (Over)")
+                points = win  # Usually just the number of tricks won if over-bid (rules vary)
+                print(
+                    f"{player_names[i]}: Bet {bet} | Won {win} -> +{points} points (Over)"
+                )
             else:
                 # Bet > Win: Usually 0 points, or sometimes negative. Here we do 0.
                 points = (bet - win) * -10
-                print(f"{player_names[i]}: Bet {bet} | Won {win} -> {(bet - win) * -10} points (Under)")
+                print(
+                    f"{player_names[i]}: Bet {bet} | Won {win} -> {(bet - win) * -10} points (Under)"
+                )
 
             player_scores[i] += points
             round_points.append(points)
@@ -110,19 +117,19 @@ def main():
     with open(final_path, "w") as f:
         f.write("FINAL SCOREBOARD\n")
         f.write("=" * 40 + "\n\n")
-        
+
         # Write Final Totals
         f.write(f"{'Player':<20} | {'Total Score':>10}\n")
         f.write("-" * 35 + "\n")
         for i in range(nop):
             f.write(f"{player_names[i]:<20} | {player_scores[i]:>10}\n")
-        
+
         f.write("\n\nDETAILED ROUND HISTORY\n")
         f.write("=" * 40 + "\n")
 
         # Write Round Details
         for r in range(num_of_rounds):
-            f.write(f"\nRound {r+1} (Cards: {r+1})\n")
+            f.write(f"\nRound {r + 1} (Cards: {r + 1})\n")
             f.write(f"{'Player':<15} | {'Bet':>5} | {'Won':>5} | {'Pts':>5}\n")
             f.write("-" * 35 + "\n")
             for i in range(nop):
@@ -133,6 +140,6 @@ def main():
 
     print(f"\nGame Over! Results saved to {final_path}")
 
-if __name__ == "__main__":
-    main()   
 
+if __name__ == "__main__":
+    main()

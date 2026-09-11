@@ -1,6 +1,6 @@
+import argparse
 import shutil
 from pathlib import Path
-import argparse
 
 # Define file extensions
 video = (".mp4", ".mov", ".webm")
@@ -23,36 +23,40 @@ for dest in destinations:
 
 # Resolve protected paths fully to ensure robust matching
 protected_paths = {
-    str(Path('~/testing/.venv').expanduser().resolve()),
+    str(Path("~/testing/.venv").expanduser().resolve()),
     str(Path("~/testing/Calc").expanduser().resolve()),
 }
+
 
 def get_unique_path(destination: Path, filename: str) -> Path:
     dest_path = destination / filename
     if not dest_path.exists():
         return dest_path
-    
+
     stem = Path(filename).stem
     suffix = Path(filename).suffix
     counter = 1
-    
+
     while (destination / f"{stem}_{counter}{suffix}").exists():
         counter += 1
-    
-    return destination / f"{stem}_{counter}{suffix}"   
+
+    return destination / f"{stem}_{counter}{suffix}"
+
 
 def get_target_directory(item: Path) -> Path:
     """Determine target directory based on extension, path safety, and current location."""
     resolved_path = str(item.resolve())
-    
+
     # 1. Skip if the file resides inside any protected path string
     for protected in protected_paths:
         if protected in resolved_path:
+            # pyrefly: ignore [bad-return]
             return None
-            
+
     # 2. Skip if the file is already sitting inside any of our destination directories
     for dest in destinations:
         if dest.resolve() in item.parents:
+            # pyrefly: ignore [bad-return]
             return None
 
     ext = item.suffix.lower()
@@ -68,7 +72,9 @@ def get_target_directory(item: Path) -> Path:
         return pictures
     elif ext in prints:
         return prints_dir
+    # pyrefly: ignore [bad-return]
     return None
+
 
 def clean_dir_recursively(final_dir: Path):
     print(f"Recursively cleaning: {final_dir}")
@@ -77,7 +83,7 @@ def clean_dir_recursively(final_dir: Path):
     for item in items:
         if not item.is_file():
             continue
-        
+
         target_dir = get_target_directory(item)
         if target_dir:
             target = get_unique_path(target_dir, item.name)
@@ -85,12 +91,13 @@ def clean_dir_recursively(final_dir: Path):
                 shutil.move(str(item), str(target))
                 print(f"Moved ({item.suffix.lower()}) to: {target}")
 
+
 def clean_dir(final_dir: Path):
     print(f"Cleaning: {final_dir}")
     for item in list(final_dir.iterdir()):
         if not item.is_file():
             continue
-        
+
         target_dir = get_target_directory(item)
         if target_dir:
             target = get_unique_path(target_dir, item.name)
@@ -98,29 +105,32 @@ def clean_dir(final_dir: Path):
                 shutil.move(str(item), str(target))
                 print(f"Moved ({item.suffix.lower()}): {item.name}")
 
+
 def dry_run(final_dir: Path):
     print(f"Dry run - would clean: {final_dir}")
     for item in final_dir.iterdir():
         if not item.is_file():
             continue
-        
+
         target_dir = get_target_directory(item)
         if target_dir:
             target = get_unique_path(target_dir, item.name)
             if target != item:
                 print(f"Would move ({item.suffix.lower()}): {item.name} → {target}")
 
+
 def dry_run_recursively(final_dir: Path):
     print(f"Dry run - would recursively clean: {final_dir}")
     for item in final_dir.rglob("*"):
         if not item.is_file():
             continue
-        
+
         target_dir = get_target_directory(item)
         if target_dir:
             target = get_unique_path(target_dir, item.name)
             if target != item:
                 print(f"Would move ({item.suffix.lower()}): {item} → {target}")
+
 
 # 1. Inherit from 'Exception' and fix the '__init__' spelling
 class PathError(Exception):
@@ -128,17 +138,25 @@ class PathError(Exception):
         # Pass the message variable directly to the parent class
         super().__init__(message)
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Sort files into media folders safely.")
+    parser = argparse.ArgumentParser(
+        description="Sort files into media folders safely."
+    )
     parser.add_argument("path", help="Path to the directory to clean")
-    parser.add_argument("-r", "--recursive", action='store_true', 
-                       help="Sort files recursively")
-    parser.add_argument("-d", "--dry-run", action='store_true', 
-                       help="Show which files would be moved without moving them")
-    
+    parser.add_argument(
+        "-r", "--recursive", action="store_true", help="Sort files recursively"
+    )
+    parser.add_argument(
+        "-d",
+        "--dry-run",
+        action="store_true",
+        help="Show which files would be moved without moving them",
+    )
+
     args = parser.parse_args()
     target_path = Path(args.path).expanduser().resolve()
-    
+
     if not target_path.exists() or not target_path.is_dir():
         raise PathError
         (f"Error: {target_path} is not a valid directory.")

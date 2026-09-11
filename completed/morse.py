@@ -24,7 +24,7 @@ stm = {
     "w": "•--",
     "x": "-••-",
     "y": "-•--",
-    "z": "--••"
+    "z": "--••",
 }
 
 ui = input("enter a string to turn it to morse code!\n> ")
@@ -33,8 +33,8 @@ translated = []
 for char in ui:
     if char in stm:
         translated.append(stm[char])
-    elif char == ' ':
-        translated.append('  ')
+    elif char == " ":
+        translated.append(" / ")
     else:
         translated.append("?")
 

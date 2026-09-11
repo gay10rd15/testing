@@ -1,0 +1,61 @@
+Screen {
+    background: #281564;
+    scrollbar-size: 0 0;
+    overflow: hidden;
+}
+
+#inputs {
+    layout: grid;
+    grid-size: 8 4;       /* 3 rows, 1 column for vertical stack */
+    grid-gutter: 1 2;
+
+    height: 100%;         /* Allow container to take available space */
+    min-height: 100vh;    /* Ensure minimum visibility */
+    padding: 1 2 2 2;
+}
+
+Input {
+    column-span: 2;
+    outline: heavy #582fe9;
+    height: 100%;
+    &:hover {
+        background: #2c2c2e;
+    }
+} 
+
+Input > .input--placeholder {
+    text-align: center;
+    color: $text;
+}   
+
+
+
+Button {
+    column-span: 2;
+    width: 1fr;
+    outline: heavy #582fe9;
+    height: 100%;
+    &:hover {
+        background: #2c2c2e;
+    }
+}
+
+Static {
+    text-align: center;
+    padding: 1 0 1 0;
+    background: #4426b3;
+    border: round #8e63f0;
+    height: 100%
+}   
+
+VerticalScroll {
+    column-span: 6;
+    height: 100%
+}
+
+Image {
+    width: auto;
+    height: auto;
+    column-span: 2;
+    row-span: 3;
+}
