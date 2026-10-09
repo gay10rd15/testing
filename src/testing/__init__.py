@@ -1,2 +1,2 @@
-def son():
+def main():
     print("sonion")

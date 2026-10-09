@@ -46,7 +46,6 @@ class Ted(App):
         self.fp.display = False
 
     def on_key(self, event: events.Key) -> None:
-        # Handles all keys
         if event.key == "ctrl+s" and "save".lower() in Binds.lower():
             if args.Path:
                 try:

@@ -22,7 +22,7 @@ except FileNotFoundError:
     with open(file_path, "w") as f:
         f.write("# roots file for gald.py")
         f.flush()
-    quit()
+    sys.exit()
 # FILTER: filter out any words
 filter_words = {
     "the",
@@ -43,7 +43,7 @@ filter_words = {
     "this",
 }
 
-# SEARCH: runs every time
+
 print("Enter a sentence to search for roots")
 ui = input("> ")
 found_any = False

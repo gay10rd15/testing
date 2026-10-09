@@ -1,5 +1,6 @@
 import argparse
 import shutil
+import sys
 from pathlib import Path
 
 # Define file extensions
@@ -160,7 +161,7 @@ if __name__ == "__main__":
     if not target_path.exists() or not target_path.is_dir():
         raise PathError
         (f"Error: {target_path} is not a valid directory.")
-        exit(1)
+        sys.exit(1)
 
     if args.dry_run:
         if args.recursive:

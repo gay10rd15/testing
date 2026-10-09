@@ -6,17 +6,18 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.Text;
 
 
 
 public class App extends Application {
     public void hw(Stage HS) {
         Text helptext = new Text("this is a help screen");
-        Scene Hscene = new Scene(helptext, 300, 200);
-        Hs.setScene(Hscene);
+        Pane root = new Pane(helptext);
+        Scene Hscene = new Scene(root, 100, 100);
+        HS.setScene(Hscene);
         HS.show();
     }
 
@@ -31,7 +32,7 @@ public class App extends Application {
         MenuItem helpItem = new MenuItem("help");
         MenuItem importItem = new MenuItem("import");
         
-        helpItem.setOnAction(e -> hw());
+        helpItem.setOnAction(e -> hw(stage));
 
 
         file.getItems().addAll(importItem);

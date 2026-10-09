@@ -57,6 +57,7 @@ coordinates = {
 
 # Monkey patch for pyautogui's "pixelMatchesColor" function
 def customPMC(x=0, y=0, expectedRGBColor=(0, 0, 0), tolerance=0, sample=None):
+    # pyrefly: ignore [bad-argument-type]
     if isinstance(x, pg.collections.abc.Sequence) and len(x) == 2:
         raise TypeError(
             "pixelMatchesColor() has updated and no longer accepts a tuple of (x, y) values for the first argument. Pass these arguments as two separate arguments instead: pixelMatchesColor(x, y, rgb) instead of pixelMatchesColor((x, y), rgb)"
@@ -133,28 +134,27 @@ def camera(cam):
 
 # Functions for detecting states
 def isCamUp():
-    global cameraUp
+
     return cameraUp
 
 
 def isFacingRight():
-    global facingRight
+
     return facingRight
 
 
 def isNotFacingRight():
-    global facingRight
+
     return not facingRight
 
 
 # Controls the night gameplay
 def officeLoop():
-    global cameraUp
+
     global robotAtDoor
     global leftDoorClosed
     global rightDoorClosed
     global foxyCheck
-    global timedOut
 
     # Initialize variables
     foxyCheck = 0
@@ -223,7 +223,7 @@ def officeLoop():
 
 
 def camFlip():
-    global cameraUp
+
     global foxyCheck
     toggleCamera()
     waitUntil(isCamUp, 5.0)
@@ -344,9 +344,7 @@ def waitUntil(condition, maxTime):
 # This controls the flow of the game
 def gameLoop():
     global onTitle
-    global star1
-    global star2
-    global star3
+
     global inOffice
     # Wait for the title screen
     while True:
@@ -409,10 +407,7 @@ def detectStates():
         # Without try it could throw a KeyboardInterrupt error
         screenshot = None
 
-        try:
-            screenshot = pg.screenshot()
-        except:
-            pass
+        screenshot = pg.screenshot()
 
         try:
             if screenshot:
@@ -503,7 +498,7 @@ def detectStates():
                 inOffice = pg.pixelMatchesColor(
                     expectedRGBColor=(35, 235, 31), sample=pixelCheck, tolerance=5
                 )
-        except:
+        except:  # noqa: E722, S110
             pass
 
         time.sleep(0.05)

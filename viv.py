@@ -1,4 +1,4 @@
-import os  # noqa: E401
+import os
 import re
 import subprocess
 import sys
@@ -6,9 +6,6 @@ import webbrowser
 
 import pyttsx3
 import speech_recognition as sr
-
-# pyrefly: ignore [missing-impor
-import Tools
 
 # Check for mac_imessage availability
 try:
@@ -58,6 +55,7 @@ engine.setProperty("rate", 190)
 voices = engine.getProperty("voices")
 
 voice_set = False
+# pyrefly: ignore [not-iterable]
 for voice in voices:
     if VOICE_ID in voice.id:
         engine.setProperty("voice", voice.id)
@@ -124,14 +122,12 @@ def send_message_flow():
     if not IMESSAGE_AVAILABLE:
         sayt("iMessage library not found. Using AppleScript fallback if possible.")
 
-    Tools.beep()
     message_content = listen_command()
 
     if not message_content:
         sayt("I didn't catch that. Cancelling message.")
         return
 
-    Tools.beep()
     recipient = listen_command()
 
     if not recipient:
@@ -145,11 +141,10 @@ def send_message_flow():
     success = False
     # Try library first
     if IMESSAGE_AVAILABLE:
-        try:
-            mac_imessage.send(message=message_content, phone_number=recipient)
-            success = True
-        except Exception as e:
-            print(f"Library failed: {e}")
+        mac_imessage.send(
+            message=message_content, phone_number=recipient, medium="imessage"
+        )
+        success = True
     if not success:
         print("Attempting AppleScript fallback...")
         if send_message_via_applescript(message_content, recipient):
@@ -162,7 +157,7 @@ def send_message_flow():
 
 
 def search():
-    Tools.beep()
+
     wts = listen_command()
 
     if not wts:
@@ -197,13 +192,12 @@ if __name__ == "__main__":
 
         # Open Website
         elif text.startswith("open"):
-            Tools.beep()
             app = listen_command()
             if app == None:
                 sayt("no app detected")
             else:
                 app_path = "/Applications/" + app + ".app"
-                subprocess.run(["open", app_path])
+                subprocess.run(["open", app_path], check=False)
 
         # Send Message
         elif "send message" in text or "send a message" in text:

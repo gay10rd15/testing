@@ -3,9 +3,16 @@ import turtle
 window = turtle.Screen()
 window.bgcolor("white")
 T = turtle.Turtle()
-T.speed(3)
-for i in range(20):
-    T.forward(2**i / 2)
-    T.left(90)
+T.speed(100)
+
+
+def A(turtle: turtle.Turtle):
+    turtle.forward(100)
+    turtle.rt(3)
+    turtle.bk(99)
+
+
+for i in range(360):
+    A(T)
 
 window.exitonclick()

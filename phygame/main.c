@@ -1,111 +1,137 @@
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
+// sdltest.c
 
-//function declarations
-bool init();
-bool makeWindow();
-void end();
-void loop();
 
-SDL_Window* gWindow = NULL;
-SDL_Surface* gScreenSurface = NULL;
-SDL_Surface* gHelloWorld = NULL;
+#include <time.h>
+#include <SDL2/SDL.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-bool init() {
-   bool success = SDL_Init(SDL_INIT_VIDEO);
-   if( !success ) {
-       SDL_Log("Initialization failed! Cuz: %s\n", SDL_GetError());
-   }
 
-   return success;
+
+#define QUITKEY SDLK_ESCAPE
+#define WIDTH 1024
+#define HEIGHT 768
+
+SDL_Window* screen = NULL;
+SDL_Renderer* renderer;
+SDL_Event event;
+SDL_Rect source, destination, dst;
+
+int errorCount = 0;
+int keypressed;
+int rectCount = 0;
+
+
+/* returns a number between 1 and max */
+int Random(int max) {
+	return (rand() % max) + 1;
 }
 
-bool makeWindow() {
-   const int kScreenWidth = 640;
-   const int kScreenHeight = 480;
-
-   gWindow = SDL_CreateWindow("SDL3 Tutorial: Hello SDL3!", kScreenWidth, kScreenHeight, 0);
-   if( gWindow == NULL) {
-       SDL_Log("Window creation failed: %s\n", SDL_GetError());
-       return false;
-   }
-
-   //get draw surface
-   gScreenSurface = SDL_GetWindowSurface( gWindow );
-
-   return true;
+void LogError(char* msg) {
+	printf("%s\n", msg);
+	errorCount++;
 }
 
-bool loadMedia() {
-   char* imagePath = "../Madd/None.png";
-
-   gHelloWorld = SDL_LoadPNG( imagePath );
-
-   if( gHelloWorld == NULL ) {
-       SDL_Log( "Unable to load image %s! Cuz: %s\n", imagePath, SDL_GetError() );
-       return false;
-   }
-
-   return true;
+/* Sets Window caption according to state - eg in debug mode or showing fps */
+void SetCaption(char* msg) {
+	SDL_SetWindowTitle(screen, msg);
 }
 
-void end() {
-   //Destroy surface
-   SDL_DestroySurface( gHelloWorld );
-   gHelloWorld = NULL;
-
-   //Destroy window
-   SDL_DestroyWindow( gWindow );
-   gWindow = NULL;
-   gScreenSurface = NULL;
-
-   SDL_Quit();
+/* Initialize all setup, set screen mode, load images etc */
+void InitSetup() {
+	srand((int)time(NULL));
+	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &screen, &renderer);
+	if (!screen) {
+		LogError("InitSetup failed to create window");
+	}
+	SetCaption("Example One");
 }
 
-void loop() {
-   //Main game loop
-   bool quit = false;
-   SDL_Event e;
-   SDL_zero( e );  //ensure that we're dealing with zeroed out memory
-
-   while( !quit ) {
-       //start by processing events
-       while( SDL_PollEvent( &e ) ) {
-           if( e.type == SDL_EVENT_QUIT ) {
-               quit = true;
-           }
-       }
-
-       //then, perform updates
-       SDL_FillSurfaceRect( gScreenSurface,
-                       NULL,
-                       SDL_MapSurfaceRGB( gScreenSurface, 0xFF, 0xFF, 0xFF) );
-
-       SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
-
-       //update the surface
-       SDL_UpdateWindowSurface( gWindow );
-   }
+/* Cleans up after game over */
+void FinishOff() {
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(screen);
+	//Quit SDL
+	SDL_Quit();
+	exit(0);
 }
 
-int main(int argc, char **argv) {
-bool success = true;
+/* read a character */
+char getaChar() {
+	int result = -1;
 
-   //initialize
-   if( !init() )
-       return -1;
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_KEYDOWN)
+		{
+			result = event.key.keysym.sym;
+			break;
+		}
+	}
+	return result;
+}
 
-   //create window
-   if( !makeWindow() )
-       return -2;
+void DrawRandomRectangle() {
+	char buff[20];
+	SDL_Rect rect;
+	SDL_SetRenderDrawColor(renderer, Random(256) - 1, Random(256) - 1, Random(256) - 1, 255);
+	rect.h = 120;// Random(100) + 20;
+	rect.w = 120;// Random(100) + 20;
+	rect.y = Random(HEIGHT - rect.h - 1);
+	rect.x = Random(WIDTH - rect.w - 1);
+	SDL_RenderFillRect(renderer, &rect);
 
-   //Now, load media
-   if ( !loadMedia() )
-       return -4;
+	rectCount++;
+	if (rectCount % 100000 == 0) {
+		SDL_RenderPresent(renderer);
 
-   loop();
+#ifdef _WIN32
+		sprintf_s(buff, sizeof(buff), "%10.6f", getElapsedTime(&s));
+#else
 
-   end();
+#endif
+		SetCaption(buff);
 
-   return 0;
+	}
+}
+
+/* main game loop. Handles demo mode, high score and game play */
+void GameLoop() {
+	int gameRunning = 1;
+	while (gameRunning)
+	{
+		DrawRandomRectangle();
+
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			case SDL_KEYDOWN:
+				keypressed = event.key.keysym.sym;
+				if (keypressed == QUITKEY)
+				{
+					gameRunning = 0;
+					break;
+				}
+
+				break;
+			case SDL_QUIT: /* if mouse click to close window */
+			{
+				gameRunning = 0;
+				break;
+			}
+			case SDL_KEYUP: {
+				break;
+			}
+			} /* switch */
+
+		} /* while SDL_PollEvent */
+	}
+}
+
+int main(int argc, char* args[])
+{
+	InitSetup();
+	GameLoop();
+	FinishOff();
+	return 0;
 }

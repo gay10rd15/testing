@@ -1,11 +1,10 @@
-import discord
-
-# pyrefly: ignore [missing-import]
-import requests
 import os
+import webbrowser
+
+import discord
+import requests
 from discord.ext import commands
 from dotenv import load_dotenv
-import webbrowser
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -17,13 +16,11 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 
 
 def get_meme():
-    try:
-        response = requests.get("https://meme-api.com/gimme")
-        response.raise_for_status()
-        data = response.json()
-        return data.get("url", "Could not fetch meme.")
-    except Exception as e:
-        return f"Error: {str(e)}"
+
+    response = requests.get("https://meme-api.com/gimme")
+    response.raise_for_status()
+    data = response.json()
+    return data.get("url", "Could not fetch meme.")
 
 
 @bot.event

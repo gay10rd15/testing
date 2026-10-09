@@ -1,4 +1,4 @@
-import os
+import sys
 from pathlib import Path
 
 import questionary
@@ -10,13 +10,12 @@ print(fpath)
 
 def check(variable):
     if variable == None:
-        quit("you cannot have nothing as a part of your character?")
+        sys.exit("you cannot have nothing as a part of your character?")
 
 
 name = questionary.text("whats you character's name").ask()
 
 # Choose class
-
 cclass = questionary.select(
     "select a class",
     choices=[

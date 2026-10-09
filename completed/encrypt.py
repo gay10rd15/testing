@@ -4,27 +4,21 @@ import time
 
 
 def shuffle_under_seed(ls, seed):
-    # Convert string to list
     items = list(ls)
-    # Set seed for reproducibility
     random.seed(seed)
-    # Shuffle and track indices
     indices = list(range(len(items)))
-    random.shuffle(indices)  # This defines the shuffle map
-    # Apply shuffle
+    random.shuffle(indices)
     shuffled = [items[i] for i in indices]
     return "".join(shuffled), indices
 
 
 def unshuffle_list(shuffled_ls, indices):
-    # Reverse the shuffle using recorded indices
     original = [""] * len(shuffled_ls)
     for i, original_index in enumerate(indices):
         original[original_index] = shuffled_ls[i]
     return "".join(original)
 
 
-# Atbash-style translation maps
 x = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()"
 y = "zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA1234567890"
 mt = str.maketrans(x, y)
@@ -32,7 +26,7 @@ mt = str.maketrans(x, y)
 
 def cl(n=1):
     for _ in range(n):
-        sys.stdout.write("\x1b[1A\x1b[2K")  # Move up and clear line
+        sys.stdout.write("\x1b[1A\x1b[2K")
         sys.stdout.flush()
 
 
@@ -47,18 +41,15 @@ while True:
         text = input("what do you want to encode: ")
         translated = text.translate(mt)
         result, indices = shuffle_under_seed(translated, key)
-        # Store indices for decoding (e.g., save alongside ciphertext)
         print(f"Encoded text: {result}")
 
     elif choice in ["decode", "d"]:
         key = input("Input the key: ")
         text = input("what do you want to decode: ")
-        # Recreate the same shuffle indices using the seed
         n = len(text)
         indices = list(range(n))
         random.seed(key)
-        random.shuffle(indices)  # Same shuffle order as encoding
-        # Now unshuffle using these indices
+        random.shuffle(indices)
         unshuffled = unshuffle_list(text, indices)
         result = unshuffled.translate(mt)
         print(f"Decoded text: {result}")

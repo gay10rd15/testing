@@ -1,0 +1,34 @@
+#chat {
+    border: round #ff2e9a;
+    background: #1c1c1c;
+    margin: 0 1;
+    padding: 0 1;
+    color: #BACBD9;
+    height: 85vh
+}
+
+ListView {
+    background: #1c1c1c;
+    border: round #ff4eb8;
+    padding: 0 1;
+    margin: 0 1;
+    color: #BACBD9
+}
+
+.ListItem.highlighted Static {
+    color: white;
+    background: blue;
+}
+
+Input {
+    color: #d1e0eb;
+    border: round #ff4eb8;
+    margin: 0 1;
+    height: 15vh;
+}
+
+Button {
+    outline: round #ff4eb8;
+    height: 15vh;
+    margin: 0 1;
+}
