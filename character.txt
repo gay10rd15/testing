@@ -1,4 +1,0 @@
-character name: 
-class: barbarian
-level: 1
-subclass: berserker

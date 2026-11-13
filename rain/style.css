@@ -1,11 +1,10 @@
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevents scrollbars */
-    background-color: #00213e; /* Black background for rain visibility */
+    overflow: hidden;
+    background-color: #00213e;
 }
 
 canvas {
-    display: block; /* Removes default inline spacing */
-    /* Do NOT set width/height here; let JS handle it */
-}   
+    display: block;
+}

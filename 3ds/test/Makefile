@@ -9,6 +9,9 @@ endif
 TOPDIR ?= $(CURDIR)
 include $(DEVKITARM)/3ds_rules
 
+CC      := $(DEVKITARM)/bin/arm-none-eabi-gcc
+CXX     := $(DEVKITARM)/bin/arm-none-eabi-g++
+export CC CXX
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed

@@ -34,16 +34,14 @@ class Raindrop {
     }
 }
 
-// Initialize drops
 const drops = [];
 for (let i = 0; i < 1000; i++) {
     drops.push(new Raindrop());
 }
 
-// Animation Loop
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     drops.forEach(drop => {
         drop.update();
         drop.draw();
@@ -52,10 +50,8 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// START THE LOOP
 animate();
 
-// Optional: Handle window resize
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;

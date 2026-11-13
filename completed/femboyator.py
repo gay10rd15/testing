@@ -14,14 +14,16 @@ rep = [
     " ",
 ]
 
-bruhs = ["bruh", "bro", "dude"]
-bruhr = ["senpai", "master"]
+bruh1 = ["bro", "bruh", "dude"]
+bruh2 = ["senpai", "master"]
 
-for word in txt.split():
-    if word in bruhs:
-        txt = re.sub(word, random.choice(bruhr), txt)
+txt = re.sub(r" ", lambda match: random.choice(rep), txt)
 
+final = txt.split()
 
-end = re.sub(r" ", random.choice(rep), txt)
+for i, word in enumerate(final):
+    if word.lower() in bruh1:
+        final[i] = random.choice(bruh2)
 
-print(end)
+txt = " ".join(final)
+print(txt)

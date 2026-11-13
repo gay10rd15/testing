@@ -1,10 +1,15 @@
-import os
+import platform
 import random
+import shelve
+from pathlib import Path
 
 import questionary
 
 MONEY_FILE = "money.txt"
 CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+if platform.system() == "Darwin":
+    dir = Path("~/Library/Caches/Shelf/bj2.db").expanduser()
+    dir.parent.mkdir(parents=True, exist_ok=True)
 
 
 def get_hand_value(hand):
@@ -21,21 +26,19 @@ def draw_card():
     return random.choice(CARDS)
 
 
-def save_money(amount):
-    with open(MONEY_FILE, "w") as f:
-        f.write(str(amount))
+def save_money(amount: int):
+    with shelve.open(str(dir)) as db:
+        db["money"] = amount
 
 
 def load_money():
-    if not os.path.exists(MONEY_FILE):
-        save_money(100)
-        return 100
-    try:
-        with open(MONEY_FILE, "r") as f:
-            return int(f.read().strip())
-    except ValueError, FileNotFoundError:
-        save_money(100)
-        return 100
+    with shelve.open(str(dir)) as db:
+        value = db.get("money")
+        return None if value is None else int(value)
+
+
+if load_money() is None:
+    save_money(100)
 
 
 print("Welcome to Blackjack!")
