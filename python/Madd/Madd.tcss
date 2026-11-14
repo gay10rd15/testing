@@ -1,0 +1,31 @@
+Screen {
+    background: $background;
+    overflow: hidden;
+}
+
+Static {
+    margin: 0 1;
+    border: round $primary;
+    height: auto;
+    width: 100%;
+
+}
+
+Image {
+    width: auto;
+    height: auto;
+    max-width: 40%;
+}
+Button {
+    width: 1fr;
+    height: 1fr;
+
+    border: round $primary
+}
+
+Ta {
+    border: round $primary;
+    width: 1fr;
+    height: 1fr;
+    min-width: 20%;
+}

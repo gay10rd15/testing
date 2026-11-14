@@ -1,0 +1,2 @@
+#!/bin/bash
+java -cp target/libs/fancy-tid-1.0.jar com.gay10rd.fancytid.App
